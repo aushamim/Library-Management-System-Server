@@ -37,6 +37,14 @@ async function run() {
       res.send(users);
     });
 
+    //get a specific user
+    app.get("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const user = await usersCollection.findOne(query);
+      res.send(user);
+    });
+
     // get all the books
     app.get("/books", async (req, res) => {
       const cursor = booksCollection.find({});
