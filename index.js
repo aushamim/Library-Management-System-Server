@@ -26,31 +26,31 @@ async function run() {
 
     const database = client.db("library-management");
     const usersCollection = database.collection("users");
+    const booksCollection = database.collection("books");
 
-    // get area
+    // ---------get area---------
 
-    // // get all services
-    // app.get("/services", async (req, res) => {
-    //   const cursor = servicesCollection.find({});
-    //   const services = await cursor.toArray();
-    //   res.send(services);
-    // });
+    // get all users
+    app.get("/users", async (req, res) => {
+      const cursor = usersCollection.find({});
+      const users = await cursor.toArray();
+      res.send(users);
+    });
 
-    // //get a specific service
+    // get all the books
+    app.get("/books", async (req, res) => {
+      const cursor = booksCollection.find({});
+      const books = await cursor.toArray();
+      res.send(books);
+    });
 
-    // app.get("/services/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const service = await servicesCollection.findOne(query);
-    //   res.send(service);
-    // });
-
-    // // get team members
-    // app.get("/team", async (req, res) => {
-    //   const cursor = teamCollection.find({});
-    //   const team = await cursor.toArray();
-    //   res.send(team);
-    // });
+    //get a specific book
+    app.get("/books/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const book = await booksCollection.findOne(query);
+      res.send(book);
+    });
 
     // //get orders
     // app.get("/orders", async (req, res) => {
@@ -94,7 +94,7 @@ async function run() {
     //   res.json({ admin: isAdmin });
     // });
 
-    // ------------post area------------
+    // ------------post area------------//
 
     //post user data
     app.post("/users", async (req, res) => {
@@ -103,14 +103,14 @@ async function run() {
       res.json(result);
     });
 
-    // // post a new service
-    // app.post("/services", async (req, res) => {
-    //   const car = req.body;
-    //   const result = await servicesCollection.insertOne(car);
-    //   res.json(result);
-    // });
+    // post a new book
+    app.post("/books", async (req, res) => {
+      const book = req.body;
+      const result = await booksCollection.insertOne(book);
+      res.json(result);
+    });
 
-    // //update area
+    //---------update area---------//
 
     // ----------upsert user----------
 
