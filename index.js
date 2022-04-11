@@ -24,14 +24,10 @@ async function run() {
   try {
     await client.connect();
 
-    // const database = client.db("algo-digital");
-    // const servicesCollection = database.collection("services");
-    // const teamCollection = database.collection("team-members");
-    // const ordersCollection = database.collection("orders");
-    // const usersCollection = database.collection("users");
-    // const reviewsCollection = database.collection("reviews");
+    const database = client.db("library-management");
+    const usersCollection = database.collection("users");
 
-    // // get area
+    // get area
 
     // // get all services
     // app.get("/services", async (req, res) => {
@@ -98,28 +94,14 @@ async function run() {
     //   res.json({ admin: isAdmin });
     // });
 
-    // // post area
+    // ------------post area------------
 
-    // //post orders
-    // app.post("/orders", async (req, res) => {
-    //   const order = req.body;
-    //   const result = await ordersCollection.insertOne(order);
-    //   res.json(result);
-    // });
-
-    // // post review
-    // app.post("/reviews", async (req, res) => {
-    //   const review = req.body;
-    //   const result = await reviewsCollection.insertOne(review);
-    //   res.json(result);
-    // });
-
-    // //post user data
-    // app.post("/users", async (req, res) => {
-    //   const user = req.body;
-    //   const result = await usersCollection.insertOne(user);
-    //   res.json(result);
-    // });
+    //post user data
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.json(result);
+    });
 
     // // post a new service
     // app.post("/services", async (req, res) => {
@@ -130,19 +112,20 @@ async function run() {
 
     // //update area
 
-    // // upsert user
-    // app.put("/users", async (req, res) => {
-    //   const user = req.body;
-    //   const filter = { email: user.email };
-    //   const options = { upsert: true };
-    //   const updateDoc = { $set: user };
-    //   const result = await usersCollection.updateOne(
-    //     filter,
-    //     updateDoc,
-    //     options
-    //   );
-    //   res.json(result);
-    // });
+    // ----------upsert user----------
+
+    app.put("/users", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const options = { upsert: true };
+      const updateDoc = { $set: user };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
 
     // // add admin to db
     // app.put("/users/admin", async (req, res) => {
