@@ -36,13 +36,13 @@ async function run() {
       res.send(users);
     });
 
-    //get a specific user
-    app.get("/users/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const user = await usersCollection.findOne(query);
-      res.send(user);
-    });
+    // //get a specific user
+    // app.get("/users/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: ObjectId(id) };
+    //   const user = await usersCollection.findOne(query);
+    //   res.send(user);
+    // });
 
     // get all the books
     app.get("/books", async (req, res) => {
@@ -74,32 +74,18 @@ async function run() {
       res.send(posts);
     });
 
-    // //get reviews
-    // app.get("/reviews", async (req, res) => {
-    //   const cursor = reviewsCollection.find({});
-    //   const reviews = await cursor.toArray();
-    //   res.send(reviews);
-    // });
-
-    // // get a specific order
-    // app.get("/orders/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const order = await ordersCollection.findOne(query);
-    //   res.json(order);
-    // });
-
-    // // get admin data
-    // app.get("/users/:email", async (req, res) => {
-    //   const email = req.params.email;
-    //   const query = { email: email };
-    //   const user = await usersCollection.findOne(query);
-    //   let isAdmin = false;
-    //   if (user?.role === "admin") {
-    //     isAdmin = true;
-    //   }
-    //   res.json({ admin: isAdmin });
-    // });
+    // get admin data
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      console.log(email);
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      let isAdmin = false;
+      if (user?.role === "admin") {
+        isAdmin = true;
+      }
+      res.json({ admin: isAdmin });
+    });
 
     // ------------post area------------//
 
@@ -141,40 +127,41 @@ async function run() {
       res.json(result);
     });
 
-    // // add admin to db
-    // app.put("/users/admin", async (req, res) => {
-    //   const user = req.body;
-    //   const filter = { email: user.email };
-    //   const updateDoc = { $set: { role: "admin" } };
-    //   const result = await usersCollection.updateOne(filter, updateDoc);
-    //   res.json(result);
-    // });
+    // add admin to db
+    app.put("/users/admin", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const updateDoc = { $set: { role: "admin" } };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
 
-    // // delete area
+    // change admin to user
+    app.put("/users/makeUser", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const updateDoc = { $set: { role: "user" } };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
 
-    // //delete order
-    // app.delete("/orders/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const result = await ordersCollection.deleteOne(query);
-    //   res.json(result);
-    // });
+    // -----------delete area-----------//
 
-    // // delete service
-    // app.delete("/services/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const result = await servicesCollection.deleteOne(query);
-    //   res.json(result);
-    // });
+    //delete post
+    app.delete("/posts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await postsCollection.deleteOne(query);
+      res.json(result);
+    });
 
-    // // delete review of a user
-    // app.delete("/reviews/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const result = await reviewsCollection.deleteOne(query);
-    //   res.json(result);
-    // });
+    // delete books
+    app.delete("/books/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await booksCollection.deleteOne(query);
+      res.json(result);
+    });
   } finally {
     // await client.close();
   }
