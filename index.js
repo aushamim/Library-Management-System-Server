@@ -3,14 +3,12 @@ const { MongoClient } = require("mongodb");
 const ObjectId = require("mongodb").ObjectId;
 require("dotenv").config();
 const cors = require("cors");
-// const fileUpload = require("express-fileupload");
 
 const app = express();
 
 // middleware area
 app.use(cors());
 app.use(express.json());
-// app.use(fileUpload());
 
 const port = process.env.PORT || 5000;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.sx8wv.mongodb.net/algo-digital?retryWrites=true&w=majority`;
@@ -27,6 +25,7 @@ async function run() {
     const database = client.db("library-management");
     const usersCollection = database.collection("users");
     const booksCollection = database.collection("books");
+    const postsCollection = database.collection("posts");
 
     // ---------get area---------
 
@@ -60,26 +59,26 @@ async function run() {
       res.send(book);
     });
 
-    // //get orders
-    // app.get("/orders", async (req, res) => {
-    //   const cursor = ordersCollection.find({});
-    //   const orders = await cursor.toArray();
-    //   res.send(orders);
-    // });
+    //get posts
+    app.get("/posts", async (req, res) => {
+      const cursor = postsCollection.find({});
+      const posts = await cursor.toArray();
+      res.send(posts);
+    });
+
+    //get single  post
+    app.get("/posts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const posts = await postsCollection.findOne(query);
+      res.send(posts);
+    });
 
     // //get reviews
     // app.get("/reviews", async (req, res) => {
     //   const cursor = reviewsCollection.find({});
     //   const reviews = await cursor.toArray();
     //   res.send(reviews);
-    // });
-
-    // //get single  review
-    // app.get("/reviews/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: ObjectId(id) };
-    //   const review = await reviewsCollection.findOne(query);
-    //   res.send(review);
     // });
 
     // // get a specific order
@@ -115,6 +114,13 @@ async function run() {
     app.post("/books", async (req, res) => {
       const book = req.body;
       const result = await booksCollection.insertOne(book);
+      res.json(result);
+    });
+
+    // post a new post
+    app.post("/posts", async (req, res) => {
+      const post = req.body;
+      const result = await postsCollection.insertOne(post);
       res.json(result);
     });
 
