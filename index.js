@@ -74,17 +74,12 @@ async function run() {
       res.send(posts);
     });
 
-    // get admin data
+    // get single user data
     app.get("/users/:email", async (req, res) => {
       const email = req.params.email;
-      console.log(email);
       const query = { email: email };
       const user = await usersCollection.findOne(query);
-      let isAdmin = false;
-      if (user?.role === "admin") {
-        isAdmin = true;
-      }
-      res.json({ admin: isAdmin });
+      res.send(user);
     });
 
     // ------------post area------------//
@@ -127,6 +122,14 @@ async function run() {
       res.json(result);
     });
 
+    // update wishlist data of a user to db
+    app.put("/users/wishlist", async (req, res) => {
+      const wishlist = req.body;
+      const filter = { email: wishlist.userEmail };
+      const updateDoc = { $push: { planning: wishlist } };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
     // add admin to db
     app.put("/users/admin", async (req, res) => {
       const user = req.body;
