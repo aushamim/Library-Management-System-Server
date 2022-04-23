@@ -130,6 +130,18 @@ async function run() {
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.json(result);
     });
+
+    // update bought data of a user to db
+    app.put("/users/bought", async (req, res) => {
+      const bought = req.body;
+
+      const cartData = bought.cart;
+      const filter = { email: bought.userEmail };
+      const updateDoc = { $set: { bought: cartData } };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.json(result);
+    });
+
     // add admin to db
     app.put("/users/admin", async (req, res) => {
       const user = req.body;
